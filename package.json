@@ -19,7 +19,11 @@
   "contributors": [
     "Ursalan Mansoor <ursalan.mansoor@cooperativecomputing.com> ()"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "fastify": "^1.14.1",
+    "fastify-plugin": "^1.5.0",
+    "firebase-admin": "^7.0.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
@@ -37,6 +41,7 @@
     "prettier": "latest",
     "remark-cli": "latest",
     "remark-preset-github": "latest",
+    "sinon": "^7.2.3",
     "xo": "latest"
   },
   "engines": {
