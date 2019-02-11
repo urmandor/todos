@@ -1,4 +1,4 @@
-async function auth(request, reply, done) {
+async function auth(request, reply) {
   if (
     !request.headers.authorization ||
     !request.headers.authorization.startsWith('Bearer ')
@@ -15,7 +15,6 @@ async function auth(request, reply, done) {
   try {
     const decodedIdToken = await this.admin.auth().verifyIdToken(idToken);
     request.user = decodedIdToken;
-    done();
   } catch (err) {
     console.log(err);
     return reply.sendResponse(403, 'Unauthorized');

@@ -20,7 +20,7 @@
     "Ursalan Mansoor <ursalan.mansoor@cooperativecomputing.com> ()"
   ],
   "dependencies": {
-    "fastify": "^1.14.1",
+    "fastify": "^2.0.0-rc.6",
     "fastify-plugin": "^1.5.0",
     "firebase-admin": "^7.0.0"
   },
