@@ -130,7 +130,6 @@ async function getTodoListHelper(listUid, userUid) {
   }
 
   if (!todolist.users || !todolist.users.includes(userUid)) {
-    console.log(todolist.users, userUid);
     return { data: null, ref: null, auth: false };
   }
 

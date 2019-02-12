@@ -3,6 +3,8 @@
 const handlers = require('../controllers/todos');
 
 async function routes(fastify, options, next) {
+  fastify.register(require('../utils/fcm-plugin'));
+
   fastify.post(
     '/',
     {

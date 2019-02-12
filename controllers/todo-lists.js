@@ -36,7 +36,6 @@ async function getAllTodoLists(request, reply) {
 
     return reply.sendResponse(200, { data: response });
   } catch (err) {
-    console.log(err);
     reply.sendResponse(400, { message: err.message });
   }
 }

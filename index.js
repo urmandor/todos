@@ -7,8 +7,7 @@ fastify.decorateReply('sendResponse', function(status, response) {
     .send(response);
 });
 
-// fastify.addHook('preValidation')
-fastify.register(require('./utils/firebase-admin'));
+fastify.register(require('./utils/firebase-plugin'));
 fastify.register(require('./routes/user'), { prefix: '/users' });
 fastify.register(require('./routes/todo-lists'), { prefix: '/todolists' });
 

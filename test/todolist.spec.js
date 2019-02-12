@@ -64,7 +64,7 @@ test('create personal todolist', async t => {
 test('create collaborative todolist', async t => {
   await fastify.ready();
   const response = await fastify.inject({
-    payload: { isCollaborative: false, name: 'mytodos', users: ['A', 'B'] },
+    payload: { isCollaborative: true, name: 'mytodos', users: ['A', 'B'] },
     headers: { authorization: 'Bearer FirebaseDummyToken' },
     url: 'todolists',
     method: 'POST'
