@@ -1,10 +1,20 @@
 async function createList(request, reply) {
   try {
+    let users = [];
+
+    if (request.body.isCollaborative) {
+      users = request.body.users;
+    }
+
+    if (!users.includes(request.user.uid)) {
+      users.push(request.user.uid);
+    }
+
     await this.admin
       .firestore()
       .collection('todolists')
       .add({
-        user: request.user.uid,
+        users,
         isCollaborative: request.body.isCollaborative,
         name: request.body.name
       });
@@ -19,13 +29,14 @@ async function getAllTodoLists(request, reply) {
     const data = await this.admin
       .firestore()
       .collection('todolists')
-      .where('user', '==', request.user.uid)
+      .where('users', 'array-contains', request.user.uid)
       .get();
 
-    const response = data.docs.map(doc => doc.data());
+    const response = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
     return reply.sendResponse(200, { data: response });
   } catch (err) {
+    console.log(err);
     reply.sendResponse(400, { message: err.message });
   }
 }

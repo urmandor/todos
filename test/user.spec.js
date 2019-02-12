@@ -1,14 +1,13 @@
 const test = require('ava');
-const sinon = require('sinon');
 const fastify = require('..');
-const firebase = require('firebase-admin');
+const authMock = require('../mocks/auth');
+
+test.after(() => {
+  authMock.restore();
+});
 
 test.before(() => {
-  sinon.stub(firebase, 'auth').get(function() {
-    return function() {
-      return { createUser: () => {} };
-    };
-  });
+  authMock.reset();
 });
 
 test('signup without email', async t => {
