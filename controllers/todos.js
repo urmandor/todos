@@ -49,7 +49,6 @@ async function updateTodo(request, reply) {
         message: request.body.message,
         isComplete: request.body.isComplete
       });
-
     return reply.sendResponse(200, { message: 'todo item updated' });
   } catch (err) {
     reply.sendResponse(400, { message: err.message });
@@ -131,6 +130,7 @@ async function getTodoListHelper(listUid, userUid) {
   }
 
   if (!todolist.users || !todolist.users.includes(userUid)) {
+    console.log(todolist.users, userUid);
     return { data: null, ref: null, auth: false };
   }
 
