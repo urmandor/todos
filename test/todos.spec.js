@@ -2,15 +2,18 @@ const test = require('ava');
 const fastify = require('..');
 const authMock = require('../mocks/auth');
 const firestoreMock = require('../mocks/firestore');
+const fcmMock = require('../mocks/fcm');
 
 test.after(() => {
   authMock.restore();
   firestoreMock.restore();
+  fcmMock.restore();
 });
 
 test.before(() => {
   authMock.reset();
   firestoreMock.reset();
+  fcmMock.reset();
 });
 
 test('create todo without authorization header', async t => {

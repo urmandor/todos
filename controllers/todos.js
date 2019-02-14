@@ -18,6 +18,13 @@ async function createTodo(request, reply) {
       isComplete: false
     });
 
+    await sendNotification.call(
+      this,
+      todolist.data.users,
+      'New todo created',
+      request.body.message
+    );
+
     return reply.sendResponse(201, {
       message: 'New todo created'
     });
@@ -49,6 +56,14 @@ async function updateTodo(request, reply) {
         message: request.body.message,
         isComplete: request.body.isComplete
       });
+
+    await sendNotification.call(
+      this,
+      todolist.data.users,
+      'Todo updated',
+      request.body.message
+    );
+
     return reply.sendResponse(200, { message: 'todo item updated' });
   } catch (err) {
     reply.sendResponse(400, { message: err.message });
@@ -75,6 +90,8 @@ async function deleteTodo(request, reply) {
       .collection('todos')
       .doc(request.params.todo)
       .delete();
+
+    await sendNotification.call(this, todolist.data.users, 'Todo deleted');
 
     return reply.sendResponse(200, { message: 'todo item deleted' });
   } catch (err) {
@@ -124,7 +141,6 @@ async function getTodoListHelper(listUid, userUid) {
     .get();
 
   const todolist = todolistRef.data();
-
   if (!todolist) {
     return { data: null, ref: null };
   }
@@ -134,6 +150,36 @@ async function getTodoListHelper(listUid, userUid) {
   }
 
   return { data: todolist, ref: todolistRef.ref, auth: true };
+}
+
+/**
+ * sendNotification function, sends notification to all
+ * of user's registered devices.
+ * @param {array} users  contains the uid of all users associated with the todolist.
+ * @param {string} title  contains the title of the notification.
+ * @param {string} body  contains the body of the notification.
+ *
+ * */
+async function sendNotification(users, title, body) {
+  const firestore = this.admin.firestore();
+  const userDocs = users.map(user => firestore.collection('users').doc(user));
+  try {
+    const usersData = await firestore.getAll(userDocs);
+    let requests = [];
+    usersData.forEach(user => {
+      const userData = user.data();
+      if (userData) {
+        const devices = Object.keys(userData);
+        const req = devices.map(device => {
+          return this.sendFCM(userData[device].fcmToken, title, body);
+        });
+        requests = requests.concat(req);
+      }
+    });
+    return await Promise.all(requests);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 module.exports = {
