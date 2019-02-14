@@ -14,6 +14,18 @@ async function userLogin(request, reply) {
       return reply.sendResponse(400, { message: 'Unsupported device' });
     }
 
+    const users = await this.admin
+      .firestore()
+      .collection('users')
+      .where(`${[deviceType]}.deviceId`, '==', deviceId)
+      .get();
+
+    users.docs.forEach(user => {
+      const data = user.data();
+      delete data[deviceType];
+      user.ref.set(data);
+    });
+
     await this.admin
       .firestore()
       .collection('users')
@@ -22,6 +34,7 @@ async function userLogin(request, reply) {
 
     reply.sendResponse(200, 'user logged in');
   } catch (err) {
+    console.log(err);
     reply.sendResponse(400, err.message);
   }
 }

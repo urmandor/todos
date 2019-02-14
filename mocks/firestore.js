@@ -57,7 +57,7 @@ function firebaseDoc(name) {
 function firebaseDocs(name) {
   return {
     ...firebaseDoc(name),
-    docs: [{ data: () => getDataFromCollection(name) }],
+    docs: [{ data: () => getDataFromCollection(name), ref: firebaseDoc(name) }],
     get: () => firebaseSnapshots(name)
   };
 }
